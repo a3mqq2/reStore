@@ -167,7 +167,7 @@ class MoogoldController extends Controller
             $product->variants()->delete();
 
             $productDetails = $this->getProductDetail($product->moogold_id)->json();
-
+            dd($productDetails);
             if (isset($productDetails['Variation']) && is_array($productDetails['Variation'])) {
                 foreach ($productDetails['Variation'] as $variantData) {
                     $variant = Variant::create([
