@@ -1,0 +1,655 @@
+/* ==========================================
+   Dark Mode Theme - Clean & Elegant
+   ========================================== */
+
+/* Root Variables */
+:root {
+    --dark-bg: #0a0e1a;
+    --dark-bg-secondary: #151923;
+    --dark-bg-card: #1a1f2e;
+    --dark-border: #2a2f3e;
+    --gold-primary: #c9a636;
+    --gold-secondary: #b89530;
+    --text-primary: #e4e4e7;
+    --text-secondary: #a1a1aa;
+    --text-muted: #71717a;
+}
+
+/* Body & Main Elements */
+body {
+    background-color: var(--dark-bg) !important;
+    color: var(--text-primary) !important;
+}
+
+/* Header */
+.header {
+    background-color: var(--dark-bg-secondary) !important;
+    border-bottom: 1px solid var(--dark-border);
+}
+
+.mainmenu-nav ul li a {
+    color: var(--text-primary) !important;
+}
+
+.mainmenu-nav ul li a:hover {
+    color: var(--gold-primary) !important;
+}
+
+/* Cards */
+.card {
+    background-color: var(--dark-bg-card) !important;
+    border: 1px solid var(--dark-border) !important;
+    color: var(--text-primary) !important;
+}
+
+/* Buttons */
+.btn-primary {
+    background-color: var(--gold-primary) !important;
+    border-color: var(--gold-primary) !important;
+    color: var(--dark-bg) !important;
+}
+
+.btn-primary:hover {
+    background-color: var(--gold-secondary) !important;
+    border-color: var(--gold-secondary) !important;
+}
+
+/* Footer */
+.axil-footer-area {
+    background-color: var(--dark-bg-secondary) !important;
+    border-top: 1px solid var(--dark-border);
+}
+
+.axil-footer-area h5,
+.axil-footer-area a,
+.axil-footer-area p {
+    color: var(--text-primary) !important;
+}
+
+.axil-footer-area a:hover {
+    color: var(--gold-primary) !important;
+}
+
+/* Forms */
+.form-control {
+    background-color: var(--dark-bg-card) !important;
+    border: 1px solid var(--dark-border) !important;
+    color: var(--text-primary) !important;
+}
+
+.form-control:focus {
+    background-color: var(--dark-bg-card) !important;
+    border-color: var(--gold-primary) !important;
+    color: var(--text-primary) !important;
+}
+
+/* Tables */
+.table {
+    color: var(--text-primary) !important;
+}
+
+.table thead th {
+    background-color: var(--dark-bg-secondary) !important;
+    border-color: var(--dark-border) !important;
+}
+
+.table tbody tr {
+    background-color: var(--dark-bg-card) !important;
+    border-color: var(--dark-border) !important;
+}
+
+/* Modals */
+.modal-content {
+    background-color: var(--dark-bg-card) !important;
+    border: 1px solid var(--dark-border) !important;
+}
+
+.modal-header,
+.modal-footer {
+    border-color: var(--dark-border) !important;
+}
+
+/* Dropdowns */
+.dropdown-menu {
+    background-color: var(--dark-bg-card) !important;
+    border: 1px solid var(--dark-border) !important;
+}
+
+.dropdown-item {
+    color: var(--text-primary) !important;
+}
+
+.dropdown-item:hover {
+    background-color: var(--dark-bg-secondary) !important;
+    color: var(--gold-primary) !important;
+}
+
+/* Service Boxes */
+.service-box {
+    background-color: var(--dark-bg-card) !important;
+    border: 1px solid var(--dark-border) !important;
+}
+
+.service-box:hover {
+    border-color: var(--gold-primary) !important;
+}
+
+.service-box .title {
+    color: var(--text-primary) !important;
+}
+
+/* Products */
+.axil-product {
+    background-color: var(--dark-bg-card) !important;
+    border: 1px solid var(--dark-border) !important;
+}
+
+.axil-product .product-content .title a {
+    color: var(--text-primary) !important;
+}
+
+.axil-product .product-content .title a:hover {
+    color: var(--gold-primary) !important;
+}
+
+/* Text Colors */
+h1, h2, h3, h4, h5, h6 {
+    color: var(--text-primary) !important;
+}
+
+p {
+    color: var(--text-secondary) !important;
+}
+
+.text-muted {
+    color: var(--text-muted) !important;
+}
+
+/* Links */
+a {
+    color: var(--gold-primary);
+}
+
+a:hover {
+    color: var(--gold-secondary);
+}
+
+/* Borders */
+.border {
+    border-color: var(--dark-border) !important;
+}
+
+/* Shadows */
+.shadow,
+.shadow-sm {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4) !important;
+}
+
+/* Side Menu */
+.side-menu {
+    background-color: var(--dark-bg-secondary) !important;
+}
+
+.side-menu-list li a {
+    color: var(--text-primary) !important;
+}
+
+.side-menu-list li a:hover {
+    color: var(--gold-primary) !important;
+}
+
+/* Search Modal */
+#searchModal .modal-body {
+    background-color: var(--dark-bg-card) !important;
+}
+
+/* WhatsApp Float */
+.whatsapp-float {
+    background-color: #25d366 !important;
+}
+
+/* Overlay */
+.overlay {
+    background: rgba(0, 0, 0, 0.8) !important;
+}
+
+/* Alert */
+.alert-info {
+    background-color: var(--dark-bg-card) !important;
+    border-color: var(--dark-border) !important;
+    color: var(--text-primary) !important;
+}
+
+/* Badge */
+.badge {
+    background-color: var(--gold-primary) !important;
+    color: var(--dark-bg) !important;
+}
+
+/* Pagination */
+.pagination .page-link {
+    background-color: var(--dark-bg-card) !important;
+    border-color: var(--dark-border) !important;
+    color: var(--text-primary) !important;
+}
+
+.pagination .page-link:hover {
+    background-color: var(--gold-primary) !important;
+    color: var(--dark-bg) !important;
+}
+
+.pagination .page-item.active .page-link {
+    background-color: var(--gold-primary) !important;
+    border-color: var(--gold-primary) !important;
+    color: var(--dark-bg) !important;
+}
+
+/* Mobile Menu */
+.mobile-nav-brand,
+.mobile-close-btn {
+    color: var(--text-primary) !important;
+}
+
+/* Header Actions */
+.header-action .action-list li button,
+.header-action .action-list li a {
+    color: var(--text-primary) !important;
+}
+
+.header-action .action-list li button:hover,
+.header-action .action-list li a:hover {
+    color: var(--gold-primary) !important;
+}
+
+/* Cart Count */
+.cart-count {
+    background-color: var(--gold-primary) !important;
+    color: var(--dark-bg) !important;
+}
+
+/* My Account Dropdown */
+.my-account-dropdown {
+    background-color: var(--dark-bg-card) !important;
+    border: 1px solid var(--dark-border) !important;
+}
+
+.my-account-dropdown ul li a {
+    color: var(--text-primary) !important;
+}
+
+.my-account-dropdown ul li a:hover {
+    color: var(--gold-primary) !important;
+}
+
+/* Products Section */
+.axil-best-seller-product-area {
+    background-color: var(--dark-bg) !important;
+}
+
+.section-title-wrapper .title {
+    color: var(--text-primary) !important;
+}
+
+.dark-product-card {
+    background-color: var(--dark-bg-card) !important;
+    border: 1px solid var(--dark-border) !important;
+    border-radius: 12px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.dark-product-card:hover {
+    border-color: var(--gold-primary) !important;
+    box-shadow: 0 8px 24px rgba(201, 166, 54, 0.15);
+}
+
+.dark-product-card .thumbnail {
+    background-color: var(--dark-bg-secondary);
+    border-radius: 12px 12px 0 0;
+}
+
+.dark-product-card .thumbnail img {
+    transition: transform 0.3s ease;
+}
+
+.dark-product-card:hover .thumbnail img {
+    transform: scale(1.05);
+}
+
+.discount-badge {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background-color: #ef4444 !important;
+    color: #fff !important;
+    padding: 8px 14px;
+    border-radius: 6px;
+    font-weight: 700;
+    font-size: 14px;
+    z-index: 2;
+}
+
+.cashback-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: var(--gold-primary) !important;
+    color: var(--dark-bg) !important;
+    padding: 8px 14px;
+    border-radius: 6px;
+    font-weight: 700;
+    font-size: 13px;
+    z-index: 2;
+    max-width: 200px;
+    text-align: center;
+}
+
+.dark-product-card .product-content {
+    background-color: var(--dark-bg-card) !important;
+    padding: 20px;
+}
+
+.product-title-dark {
+    text-align: right !important;
+    margin-bottom: 15px !important;
+}
+
+.product-title-dark a {
+    color: var(--text-primary) !important;
+    font-weight: 700;
+    font-size: 16px;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.product-title-dark a:hover {
+    color: var(--gold-primary) !important;
+}
+
+.product-price-dark {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin: 0;
+    padding-top: 15px;
+    border-top: 1px solid var(--dark-border);
+}
+
+.product-price-dark .price-label {
+    font-size: 12px;
+    color: var(--text-muted);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.product-price-dark .old-price {
+    color: var(--text-muted) !important;
+    font-size: 14px;
+    text-decoration: line-through;
+    margin-left: 8px;
+}
+
+.product-price-dark .new-price {
+    color: var(--gold-primary) !important;
+    font-weight: 900 !important;
+    font-size: 18px !important;
+}
+
+.product-price-dark .unavailable {
+    color: var(--text-muted) !important;
+    font-weight: 600;
+    font-size: 16px;
+}
+
+/* Slick Layout */
+.slick-single-layout {
+    padding: 10px;
+}
+
+/* Responsive Product Cards */
+@media (max-width: 576px) {
+    .dark-product-card .product-content {
+        padding: 15px;
+    }
+
+    .product-title-dark a {
+        font-size: 14px;
+    }
+
+    .product-price-dark .new-price {
+        font-size: 16px !important;
+    }
+
+    .cashback-badge {
+        font-size: 11px;
+        padding: 6px 10px;
+        max-width: 150px;
+    }
+
+    .discount-badge {
+        font-size: 12px;
+        padding: 6px 10px;
+    }
+}
+
+/* Testimonials Section */
+.testimonial-slider-area {
+    background-color: var(--dark-bg) !important;
+}
+
+.testimonial-card-dark {
+    background-color: var(--dark-bg-card);
+    border: 1px solid var(--dark-border);
+    border-radius: 12px;
+    padding: 30px;
+    height: 100%;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.testimonial-card-dark:hover {
+    border-color: var(--gold-primary);
+    box-shadow: 0 8px 24px rgba(201, 166, 54, 0.15);
+}
+
+.testimonial-content-dark {
+    position: relative;
+    z-index: 1;
+}
+
+.quote-icon {
+    text-align: right;
+    margin-bottom: 20px;
+}
+
+.quote-icon i {
+    font-size: 36px;
+    color: var(--gold-primary);
+    opacity: 0.3;
+}
+
+.testimonial-description {
+    color: var(--text-secondary) !important;
+    font-size: 15px;
+    line-height: 1.8;
+    margin-bottom: 20px;
+    min-height: 80px;
+    font-style: italic;
+}
+
+.customer-rating-dark {
+    margin-bottom: 20px;
+    text-align: center;
+    padding: 15px 0;
+    border-top: 1px solid var(--dark-border);
+    border-bottom: 1px solid var(--dark-border);
+}
+
+.customer-rating-dark i {
+    color: var(--gold-primary);
+    font-size: 18px;
+    margin: 0 3px;
+}
+
+.customer-rating-dark i.fa-star-o {
+    color: var(--text-muted);
+}
+
+.customer-info {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.customer-avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    border: 2px solid var(--gold-primary);
+}
+
+.customer-name-dark {
+    color: var(--text-primary) !important;
+    font-weight: 700;
+    font-size: 16px;
+    margin: 0;
+}
+
+/* Owl Carousel Dark Mode */
+.owl-carousel .owl-nav button {
+    background-color: var(--dark-bg-card) !important;
+    color: var(--gold-primary) !important;
+    border: 1px solid var(--dark-border) !important;
+}
+
+.owl-carousel .owl-nav button:hover {
+    background-color: var(--gold-primary) !important;
+    color: var(--dark-bg) !important;
+    border-color: var(--gold-primary) !important;
+}
+
+.owl-carousel .owl-dots .owl-dot span {
+    background-color: var(--dark-border) !important;
+}
+
+.owl-carousel .owl-dots .owl-dot.active span {
+    background-color: var(--gold-primary) !important;
+}
+
+/* Responsive Testimonials */
+@media (max-width: 768px) {
+    .testimonial-card-dark {
+        padding: 20px;
+    }
+
+    .testimonial-description {
+        font-size: 14px;
+        min-height: 60px;
+    }
+
+    .quote-icon i {
+        font-size: 28px;
+    }
+
+    .customer-rating-dark i {
+        font-size: 16px;
+    }
+
+    .customer-avatar {
+        width: 40px;
+        height: 40px;
+    }
+
+    .customer-name-dark {
+        font-size: 14px;
+    }
+}
+
+/* Banner Slider - Full Width */
+.banner-slider-wrapper {
+    width: 100%;
+    position: relative;
+    background-color: var(--dark-bg-secondary);
+}
+
+.banner-swiper {
+    width: 100%;
+    height: auto;
+}
+
+.banner-link {
+    display: block;
+    width: 100%;
+}
+
+.banner-image {
+    width: 100%;
+    height: auto;
+    max-height: 500px;
+    object-fit: cover;
+    display: block;
+}
+
+/* Swiper Navigation Buttons */
+.banner-nav-btn {
+    background-color: var(--dark-bg-card) !important;
+    color: var(--gold-primary) !important;
+    width: 44px !important;
+    height: 44px !important;
+    border-radius: 50%;
+    border: 1px solid var(--dark-border);
+    transition: all 0.3s ease;
+}
+
+.banner-nav-btn:after {
+    font-size: 18px !important;
+    font-weight: 700;
+    color: var(--gold-primary);
+}
+
+.banner-nav-btn:hover {
+    background-color: var(--gold-primary) !important;
+}
+
+.banner-nav-btn:hover:after {
+    color: var(--dark-bg);
+}
+
+/* Swiper Pagination */
+.banner-pagination {
+    bottom: 20px !important;
+}
+
+.banner-pagination .swiper-pagination-bullet {
+    width: 12px;
+    height: 12px;
+    background-color: var(--dark-border) !important;
+    opacity: 1;
+    transition: all 0.3s ease;
+}
+
+.banner-pagination .swiper-pagination-bullet-active {
+    background-color: var(--gold-primary) !important;
+    width: 30px;
+    border-radius: 6px;
+}
+
+/* Responsive Banners */
+@media (max-width: 768px) {
+
+    .banner-image {
+        max-height: 300px;
+    }
+
+    .banner-nav-btn {
+        width: 36px !important;
+        height: 36px !important;
+    }
+
+    .banner-nav-btn:after {
+        font-size: 14px !important;
+    }
+}

@@ -1,0 +1,87 @@
+@import url('https://fonts.googleapis.com/css2?family=Almarai:wght@300&display=swap');
+
+
+/* ==============
+  General
+===================*/
+body {
+  background-repeat: repeat;
+  background: #fff !important;
+  font-family: "Almarai", sans-serif;
+  color: #354558;
+  font-size: 13px;
+}
+
+
+
+.text-center {
+  text-align: center !important;
+}
+
+.text-danger {
+  color: #ce0000 !important;
+}
+
+th,
+td {
+  text-align: center !important;
+}
+
+.padding-5mm {
+  padding: 5mm !important;
+}
+
+.printable-table {
+  width: 100%;
+  display: table;
+  border-collapse: separate;
+  box-sizing: border-box;
+  text-indent: initial;
+  border-spacing: 0px !important;
+  border-color: grey;
+}
+
+.printable-table thead {
+
+
+  background-color: rgb(246, 253, 255) !important;
+}
+
+.printable-table td,
+.printable-table th {
+  padding: 5px 10px;
+  margin: 0px !important;
+  border: 1px solid #00284d;
+}
+
+tr.small {
+  font-size: 10px !important;
+}
+.footer-container{
+  position: absolute;
+  bottom: 0.5cm;
+}
+
+.padding-5mm {
+  padding: 5mm !important;
+  padding-top: 5px !important;
+}
+
+.receipt-value{
+  background-color: rgb(245, 245, 245) !important;
+  padding-top: 6px;
+  padding-bottom: 6px;
+}
+
+.receipt-table {
+  border-collapse:separate; 
+  border-spacing: 0 1em;
+}
+.bg-primary{
+  background-color: #1a1a18 !important;
+}
+
+body.A4 .sheet {
+  width: 210mm;
+  height: none !important;
+}
