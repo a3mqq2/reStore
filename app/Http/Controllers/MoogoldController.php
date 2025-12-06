@@ -158,36 +158,36 @@ class MoogoldController extends Controller
 
 
 
- 
-public function syncAllMoogoldProducts()
-{
-    $products = Product::whereNotNull('moogold_id')->get();
+    
+    public function syncAllMoogoldProducts()
+    {
+        $products = Product::whereNotNull('moogold_id')->get();
 
-    foreach ($products as $product) {
-        $product->variants()->delete();
-        $productDetails = $this->getProductDetail($product->moogold_id);
+        foreach ($products as $product) {
+            $product->variants()->delete();
 
+            $productDetails = $this->getProductDetail($product->moogold_id)->json();
 
+            if (isset($productDetails['Variation']) && is_array($productDetails['Variation'])) {
+                foreach ($productDetails['Variation'] as $variantData) {
+                    $variant = Variant::create([
+                        'product_id' => $product->id,
+                        'name' => $variantData['variation_name'],
+                        'moogold_id' => $variantData['variation_id'],
+                        'moogold_usd' => $variantData['variation_price'],
+                    ]);
 
-        if (isset($productDetails['Variation']) && is_array($productDetails['Variation'])) {
-            foreach ($productDetails['Variation'] as $variantData) {
-                $variant = Variant::create([
-                    'product_id' => $product->id,
-                    'name' => $variantData['variation_name'],
-                    'moogold_id' => $variantData['variation_id'],
-                    'moogold_usd' => $variantData['variation_price'],
-                ]);
-
-                $variantPrice = new VariantPrice();
-                $variantPrice->variant_id = $variant->id;
-                $variantPrice->payment_method_id = 1;
-                $variantPrice->price = 0;
-                $variantPrice->save();
+                    VariantPrice::create([
+                        'variant_id' => $variant->id,
+                        'payment_method_id' => 1,
+                        'price' => 0,
+                    ]);
+                }
             }
         }
+
+        return response()->json(['message' => 'Moogold products synchronized successfully.']);
     }
 
-    return response()->json(['message' => 'Moogold products synchronized successfully.']);
-}
 
 }
