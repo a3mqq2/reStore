@@ -175,6 +175,7 @@ public function syncAllMoogoldProducts()
                     'product_id' => $product->id,
                     'name' => $variantData['variation_name'],
                     'moogold_id' => $variantData['variation_id'],
+                    'moogold_usd' => $variantData['variation_price'],
                 ]);
 
                 $variantPrice = new VariantPrice();
