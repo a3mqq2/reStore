@@ -229,6 +229,8 @@ Route::get('update-smileone-names', function() {
 
 
 
+Route::get('/smileone/sync-variants', [SmileOneController::class, 'syncSmileOneVariants']);
+
 
 Route::get('/sync-moogold-products', [MoogoldController::class, 'syncAllMoogoldProducts']);
 

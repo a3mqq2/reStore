@@ -298,4 +298,42 @@ class SmileOneController extends Controller
         }
     }
 
+
+    public function syncSmileOneVariants()
+{
+    $products = Product::whereNotNull('smileone_name')->get();
+
+    foreach ($products as $product) {
+        $productData = $this->getProductList($product->smileone_name);
+
+        if (!isset($productData['data']) || !is_array($productData['data'])) {
+            Log::warning('SmileOne - No product data returned', ['product' => $product->smileone_name]);
+            continue;
+        }
+
+        $item = $productData['data'][0] ?? null;
+        if (!$item) continue;
+
+        if (isset($item['variants']) && is_array($item['variants'])) {
+            $product->variants()->delete();
+
+            foreach ($item['variants'] as $variantData) {
+                $variant = $product->variants()->create([
+                    'name' => $variantData['name'],
+                    'smileone_id' => $variantData['id'],
+                    'smileone_points' => $variantData['price'] ?? 0,
+                ]);
+
+                $variant->prices()->updateOrCreate(
+                    ['payment_method_id' => 1],
+                    ['price' => 0]
+                );
+            }
+        }
+    }
+
+    return response()->json(['message' => 'تم مزامنة Variants لجميع منتجات SmileOne بنجاح']);
+}
+
+
 }
