@@ -136,9 +136,17 @@
         <div class="section-title-wrapper">
             <h2 class="title">الألعاب</h2>
         </div>
-        <div class="row">
+
+        <!-- Category Tabs -->
+        <div class="category-tabs mb-4">
+            <button class="category-tab active" data-category="all">الكل</button>
+            <button class="category-tab" data-category="1">شحن بالـ ID</button>
+            <button class="category-tab" data-category="2">البطاقات</button>
+        </div>
+
+        <div class="row" id="products-grid">
             @foreach ($products as $product)
-                <div class="col-xl-4 col-md-6 col-sm-6 col-6">
+                <div class="col-xl-4 col-md-6 col-sm-6 col-6 product-item" data-category="{{ $product->product_category_id }}">
                     <div class="slick-single-layout">
                         <div class="axil-product product-style-three dark-product-card">
                             <div class="thumbnail position-relative">
@@ -332,6 +340,44 @@
 
 </style>
 <style>
+    /* Category Tabs */
+    .category-tabs {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .category-tab {
+        padding: 12px 28px;
+        border: 2px solid var(--color-primary, #c9a636);
+        background: transparent;
+        color: var(--color-primary, #c9a636);
+        border-radius: 30px;
+        font-size: 1.1rem;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .category-tab:hover {
+        background: var(--color-primary, #c9a636);
+        color: #0a0e1a;
+    }
+
+    .category-tab.active {
+        background: var(--color-primary, #c9a636);
+        color: #0a0e1a;
+    }
+
+    .product-item {
+        transition: all 0.3s ease;
+    }
+
+    .product-item.hidden {
+        display: none;
+    }
+
     /* Discount Badge styles */
     .discount-badge {
       position: absolute;
@@ -586,6 +632,31 @@
             nextEl: '.swiper-button-next',
             prevEl: '.swiper-button-prev',
         },
+    });
+
+    // Category Tabs Filter
+    document.querySelectorAll('.category-tab').forEach(tab => {
+        tab.addEventListener('click', function() {
+            // Remove active class from all tabs
+            document.querySelectorAll('.category-tab').forEach(t => t.classList.remove('active'));
+            // Add active class to clicked tab
+            this.classList.add('active');
+
+            const category = this.getAttribute('data-category');
+            const products = document.querySelectorAll('.product-item');
+
+            products.forEach(product => {
+                if (category === 'all') {
+                    product.classList.remove('hidden');
+                } else {
+                    if (product.getAttribute('data-category') === category) {
+                        product.classList.remove('hidden');
+                    } else {
+                        product.classList.add('hidden');
+                    }
+                }
+            });
+        });
     });
 </script>
 @endsection
