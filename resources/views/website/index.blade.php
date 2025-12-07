@@ -168,7 +168,7 @@
                                         $theLessPrice = $product->variants
                                             ->where('is_active', 1)
                                             ->filter(function($variant) {
-                                                return $variant->calculated_price !== null;
+                                                return $variant->calculated_price != null;
                                             })
                                             ->min('calculated_price');
                                     } else {
