@@ -350,9 +350,9 @@
 
     .category-tab {
         padding: 12px 28px;
-        border: 2px solid var(--color-primary, #c9a636);
+        border: 2px solid #fff;
         background: transparent;
-        color: var(--color-primary, #c9a636);
+        color: #fff;
         border-radius: 30px;
         font-size: 1.1rem;
         font-weight: 700;
@@ -361,12 +361,14 @@
     }
 
     .category-tab:hover {
-        background: var(--color-primary, #c9a636);
+        background: #c9a636;
+        border-color: #c9a636;
         color: #0a0e1a;
     }
 
     .category-tab.active {
-        background: var(--color-primary, #c9a636);
+        background: #c9a636;
+        border-color: #c9a636;
         color: #0a0e1a;
     }
 
