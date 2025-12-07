@@ -503,7 +503,7 @@
                                     <option value="">اختر</option>
                                     <option value="prepaid-card">كروت الدفع المسبق ( الخاصه RE STORE ) </option>
                                     <option value="libyana">ليبيانا</option>
-                                    {{-- <option value="almadar">المدار</option> --}}
+                                    <option value="almadar">المدار</option>
                                     <option value="vodafone-cash">فودافون كاش</option>
                                     <option value="asiacell">آسياسيل</option>
                                 </select>
