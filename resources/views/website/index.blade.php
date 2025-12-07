@@ -146,7 +146,7 @@
 
         <div class="row" id="products-grid">
             @foreach ($products as $product)
-                <div class="col-xl-4 col-md-6 col-sm-6 col-6 product-item" data-category="{{ $product->product_category_id }}">
+                <div class="col-xl-4 col-md-6 col-sm-6 col-6 product-item" data-category="{{ $product->category_id }}">
                     <div class="slick-single-layout">
                         <div class="axil-product product-style-three dark-product-card">
                             <div class="thumbnail position-relative">
