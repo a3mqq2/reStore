@@ -305,7 +305,7 @@ class SmileOneController extends Controller
 
     foreach ($products as $product) {
         $productData = $this->getProductList($product->smileone_name);
-
+        dd($productData);
         if (!isset($productData['data']) || !is_array($productData['data'])) {
             Log::warning('SmileOne - No product data returned', ['product' => $product->smileone_name]);
             continue;
