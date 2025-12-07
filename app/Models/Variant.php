@@ -45,7 +45,7 @@ class Variant extends Model
         }
 
         // Fallback to MooGold calculation
-        if ($this->moogold_usd && $this->moogold_usd > 0) {
+        if ($this->moogold_usd) {
             return round($this->moogold_usd * $content->dollar_sell_rate, 2);
         }
 
@@ -70,7 +70,7 @@ class Variant extends Model
         }
 
         // Fallback to MooGold calculation
-        if ($this->moogold_usd && $this->moogold_usd > 0) {
+        if ($this->moogold_usd) {
             return round($this->moogold_usd * $content->dollar_buy_rate, 2);
         }
 
