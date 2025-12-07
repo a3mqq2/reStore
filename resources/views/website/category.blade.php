@@ -35,25 +35,31 @@
                                     <div class="product-price-variant text-right" style="margin-top: 0;">
                                         <span class="price current-price text-right">
                                             @php
-                                                $FirstVariant = $product->variants->first();
-                                                $LastVariant = $product->variants->sortByDesc('id')->first();
-                                                $firstGetPrice = $FirstVariant->prices->where('payment_method_id', $currentPaymentMethod)->first();
-                                                $lastGetPrice = $LastVariant->prices->where('payment_method_id', $currentPaymentMethod)->first();
-                                                $paymentMethod = App\Models\PaymentMethod::find($currentPaymentMethod);
-                                                $discountedPrice = $firstGetPrice->price;
-                                                if ($product->discount && $product->discount->discount_percentage) {
-                                                    $discount = $firstGetPrice->price * ($product->discount->discount_percentage / 100);
-                                                    $discountedPrice = $firstGetPrice->price - $discount;
+                                                // Get the minimum price from active variants using calculated_price
+                                                // This will automatically use SmileOne or MooGold based on availability
+                                                $theLessPrice = $product->variants
+                                                    ->where('is_active', 1)
+                                                    ->filter(function($variant) {
+                                                        return $variant->calculated_price != null;
+                                                    })
+                                                    ->min('calculated_price');
+
+                                                $discountedPrice = $theLessPrice;
+                                                if ($theLessPrice && $product->discount && $product->discount->discount_percentage) {
+                                                    $discount = $theLessPrice * ($product->discount->discount_percentage / 100);
+                                                    $discountedPrice = $theLessPrice - $discount;
                                                 }
                                             @endphp
 
                                             <h6 class="m-0 font-weight-bold" style="text-align: right !important; font-weight: bold !important; margin-top: 5px;">
-                                                السعر يبدا من : 
-                                                @if ($discountedPrice != $firstGetPrice->price)
-                                                    <del>{{ $firstGetPrice->price }} {{ $paymentMethod->currency->symbol }}</del>
-                                                    {{ $discountedPrice }} {{ $paymentMethod->currency->symbol }}
+                                                السعر يبدا من :
+                                                @if ($discountedPrice && $discountedPrice != $theLessPrice)
+                                                    <del>{{ $theLessPrice }} نقطة</del>
+                                                    {{ $discountedPrice }} نقطة
+                                                @elseif($theLessPrice)
+                                                    {{ $theLessPrice }} نقطة
                                                 @else
-                                                    {{ $firstGetPrice->price }} {{ $paymentMethod->currency->symbol }}
+                                                    غير متوفر
                                                 @endif
                                             </h6>
                                         </span>

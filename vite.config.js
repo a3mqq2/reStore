@@ -31,6 +31,6 @@ export default defineConfig({
         },
     },
     server: {
-        // host: 'https://www.re-store.co', // Change this to the desired host
+        // host: 'https://www.re-store.com.ly', // Change this to the desired host
       },
 });

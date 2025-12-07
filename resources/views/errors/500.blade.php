@@ -58,7 +58,7 @@
         <p>نحن نعمل جاهدين لتحسين تجربتكم. يرجى العودة لاحقاً. نشكركم على تفهمكم.</p>
         <img src="https://static.vecteezy.com/system/resources/previews/006/731/546/original/maintenance-illustration-screwdriver-and-wrench-icon-flat-design-suitable-for-many-purposes-vector.jpg" width="300"  alt="Under Maintenance">
         <p>إذا كانت لديكم أي استفسارات، يمكنكم التواصل معنا على البريد الإلكتروني:</p>
-        <a href="mailto:support@re-store.co" class="contact">support@re-store.co</a>
+        <a href="mailto:support@re-store.com.ly" class="contact">support@re-store.com.ly</a>
     </div>
 </body>
 </html>

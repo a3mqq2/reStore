@@ -42,7 +42,7 @@
             </p>
 
 
-            <p class="text-danger font-weight-bold" style="font-weight: bold;" >في حال لديك اي استفسارات يمكنكم التواصل معنا او رؤية  <a href="https://re-store.co/faq">الأسئلة الشائعة</a> </p>
+            <p class="text-danger font-weight-bold" style="font-weight: bold;" >في حال لديك اي استفسارات يمكنكم التواصل معنا او رؤية  <a href="https://re-store.com.ly/faq">الأسئلة الشائعة</a> </p>
 
             <div v-if="product.requirements.length" class="requirements mt-4">
               <h5>متطلبات المنتج</h5>
@@ -157,7 +157,17 @@ export default {
         this.product = response.data;
         this.product.requirements.forEach(req => this.$set(this.form.requirements, req.id, ''));
         this.product.variants = this.product.variants.filter(v => v.is_active == 1);
-        if (this.product.variants.length) this.updatePrice(this.product.variants[0]);
+
+        // Select variant with minimum price
+        if (this.product.variants.length) {
+          const cheapestVariant = this.product.variants.reduce((min, variant) => {
+            const minPrice = this.getPriceForPaymentMethod(min);
+            const variantPrice = this.getPriceForPaymentMethod(variant);
+            return variantPrice < minPrice ? variant : min;
+          }, this.product.variants[0]);
+
+          this.updatePrice(cheapestVariant);
+        }
       } catch (error) { }
     },
     async fetchPaymentMethods() {
