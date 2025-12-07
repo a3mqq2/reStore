@@ -300,27 +300,25 @@ class SmileOneController extends Controller
 
 
     public function syncSmileOneVariants()
-{
-    $products = Product::whereNotNull('smileone_name')->get();
+    {
+        $products = Product::whereNotNull('smileone_name')->get();
 
-    foreach ($products as $product) {
-        $productData = $this->getProductList($product->smileone_name);
-        dd($productData);
-        if (!isset($productData['data']) || !is_array($productData['data'])) {
-            Log::warning('SmileOne - No product data returned', ['product' => $product->smileone_name]);
-            continue;
-        }
+        foreach ($products as $product) {
+            $productData = $this->getProductList($product->smileone_name);
 
-        $item = $productData['data'][0] ?? null;
-        if (!$item) continue;
+            if (!isset($productData['data']['product']) || !is_array($productData['data']['product'])) {
+                Log::warning('SmileOne - No product data returned', ['product' => $product->smileone_name]);
+                continue;
+            }
 
-        if (isset($item['variants']) && is_array($item['variants'])) {
+            $items = $productData['data']['product'];
+
             $product->variants()->delete();
 
-            foreach ($item['variants'] as $variantData) {
+            foreach ($items as $variantData) {
                 $variant = $product->variants()->create([
-                    'name' => $variantData['name'],
-                    'smileone_id' => $variantData['id'],
+                    'name' => $variantData['spu'] ?? 'Unknown',
+                    'smileone_id' => $variantData['id'] ?? null,
                     'smileone_points' => $variantData['price'] ?? 0,
                 ]);
 
@@ -330,10 +328,9 @@ class SmileOneController extends Controller
                 );
             }
         }
-    }
 
-    return response()->json(['message' => 'تم مزامنة Variants لجميع منتجات SmileOne بنجاح']);
-}
+        return response()->json(['message' => 'تم مزامنة Variants لجميع منتجات SmileOne بنجاح']);
+    }
 
 
 }
