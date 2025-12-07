@@ -28,36 +28,52 @@ class Variant extends Model
     }
 
     /**
-     * Calculate SmileOne price: smileone_points * smileone_point_usd * dollar_sell_rate
+     * Calculate price based on available data:
+     * Priority 1: smileone_points * smileone_point_usd * dollar_sell_rate
+     * Priority 2: moogold_usd * dollar_sell_rate
      */
     public function getCalculatedPriceAttribute()
     {
-        if (!$this->smileone_points || $this->smileone_points <= 0) {
-            return null;
-        }
-
         $content = Content::first();
-        if (!$content || !$content->smileone_point_usd || !$content->dollar_sell_rate) {
+        if (!$content || !$content->dollar_sell_rate) {
             return null;
         }
 
-        return round($this->smileone_points * $content->smileone_point_usd * $content->dollar_sell_rate, 2);
+        // Try SmileOne calculation first
+        if ($this->smileone_points && $this->smileone_points > 0 && $content->smileone_point_usd) {
+            return round($this->smileone_points * $content->smileone_point_usd * $content->dollar_sell_rate, 2);
+        }
+
+        // Fallback to MooGold calculation
+        if ($this->moogold_usd && $this->moogold_usd > 0) {
+            return round($this->moogold_usd * $content->dollar_sell_rate, 2);
+        }
+
+        return null;
     }
 
     /**
-     * Calculate SmileOne cost: smileone_points * smileone_point_usd * dollar_buy_rate
+     * Calculate cost based on available data:
+     * Priority 1: smileone_points * smileone_point_usd * dollar_buy_rate
+     * Priority 2: moogold_usd * dollar_buy_rate
      */
     public function getCalculatedCostAttribute()
     {
-        if (!$this->smileone_points || $this->smileone_points <= 0) {
-            return null;
-        }
-
         $content = Content::first();
-        if (!$content || !$content->smileone_point_usd || !$content->dollar_buy_rate) {
+        if (!$content || !$content->dollar_buy_rate) {
             return null;
         }
 
-        return round($this->smileone_points * $content->smileone_point_usd * $content->dollar_buy_rate, 2);
+        // Try SmileOne calculation first
+        if ($this->smileone_points && $this->smileone_points > 0 && $content->smileone_point_usd) {
+            return round($this->smileone_points * $content->smileone_point_usd * $content->dollar_buy_rate, 2);
+        }
+
+        // Fallback to MooGold calculation
+        if ($this->moogold_usd && $this->moogold_usd > 0) {
+            return round($this->moogold_usd * $content->dollar_buy_rate, 2);
+        }
+
+        return null;
     }
 }
