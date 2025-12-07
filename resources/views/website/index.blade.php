@@ -160,26 +160,14 @@
                                     </h5>
 
                                     @php
-                                    $paymentMethod = App\Models\PaymentMethod::find(1);
-
-                                    // Check if this is a SmileOne product with dynamic pricing
-                                    if ($product->smileone_name) {
-                                        // Use calculated_price for SmileOne products
-                                        $theLessPrice = $product->variants
-                                            ->where('is_active', 1)
-                                            ->filter(function($variant) {
-                                                return $variant->calculated_price != null;
-                                            })
-                                            ->min('calculated_price');
-                                    } else {
-                                        // Use regular variant prices for other products
-                                        $theLessPrice = $product->variants
-                                            ->where('is_active',1)
-                                            ->flatMap(function($variant) use ($currentPaymentMethod) {
-                                                return $variant->prices->where('payment_method_id', $currentPaymentMethod);
-                                            })
-                                            ->min('price');
-                                    }
+                                    // Get the minimum price from active variants using calculated_price
+                                    // This will automatically use SmileOne or MooGold based on availability
+                                    $theLessPrice = $product->variants
+                                        ->where('is_active', 1)
+                                        ->filter(function($variant) {
+                                            return $variant->calculated_price != null;
+                                        })
+                                        ->min('calculated_price');
 
                                     $discountedPrice = $theLessPrice;
                                     if ($theLessPrice && $product->discount && $product->discount->discount_percentage) {

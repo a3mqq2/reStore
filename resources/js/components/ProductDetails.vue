@@ -186,10 +186,11 @@ export default {
       return Object.values(this.form.requirements).every(value => value);
     },
     getPriceForPaymentMethod(variant) {
-      // Use calculated_price for SmileOne products if available
-      if (this.product.smileone_name && variant.calculated_price) {
+      // Use calculated_price which automatically uses SmileOne or MooGold based on availability
+      if (variant.calculated_price) {
         return variant.calculated_price;
       }
+      // Fallback to regular prices if calculated_price is not available
       if (!variant.prices) return 0;
       const priceObj = variant.prices.find(price => price.payment_method_id == this.selectedPaymentMethod.id);
       return priceObj ? priceObj.price : (variant.prices.length ? variant.prices[0].price : 0);

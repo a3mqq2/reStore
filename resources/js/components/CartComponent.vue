@@ -412,11 +412,11 @@ export default {
       this.fetchCartItems();
     },
 
-    // Get item price - use calculated_price for SmileOne products
+    // Get item price - use calculated_price which automatically uses SmileOne or MooGold
     getItemPrice(item) {
       if (item.variant) {
-        // Use calculated_price for SmileOne products if available
-        if (item.product.smileone_name && item.variant.calculated_price) {
+        // Use calculated_price if available (works for SmileOne and MooGold)
+        if (item.variant.calculated_price) {
           return item.variant.calculated_price;
         }
         // Fallback to variant price
@@ -433,15 +433,15 @@ export default {
       return 0;
     },
 
-    // Get item cost - use calculated_cost for SmileOne products
+    // Get item cost - use calculated_cost which automatically uses SmileOne or MooGold
     getItemCost(item) {
       if (item.variant) {
-        // Use calculated_cost for SmileOne products if available
-        if (item.product.smileone_name && item.variant.calculated_cost) {
+        // Use calculated_cost if available (works for SmileOne and MooGold)
+        if (item.variant.calculated_cost) {
           return item.variant.calculated_cost;
         }
       }
-      return null; // No cost for non-SmileOne products
+      return null; // No cost for products without calculated_cost
     },
 
     calculateDiscountedTotal() {

@@ -267,6 +267,8 @@ class CartController extends Controller
             $balanceBefore = null;
             $balanceUser = null;
 
+            // Charge customer wallet if payment method is wallet (ID = 1)
+            // This uses discounted_total which is calculated from calculated_price (sell price)
             if ($request->paymentMethod == 1) {
                 $user = Customer::find($request->customer_id);
                 if ($user->balance < $order->discounted_total) {
@@ -302,7 +304,9 @@ class CartController extends Controller
                 $orderProduct->variant_id = $productData['variant_id'];
                 $orderProduct->name = $productData['product']['name'];
                 $orderProduct->quantity = $productData['quantity'];
+                // price is calculated_price (sell price) from variant
                 $orderProduct->price = $productData['price'];
+                // cost is calculated_cost (buy price) from variant - used for SmileOne/MooGold
                 $orderProduct->cost = $productData['cost'] ?? null;
                 $orderProduct->variant = $productData['variant_id'];
                 $orderProduct->save();
