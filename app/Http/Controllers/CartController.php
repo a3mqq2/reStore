@@ -311,6 +311,69 @@ class CartController extends Controller
                 $orderProduct->variant = $productData['variant_id'];
                 $orderProduct->save();
 
+                // Process SmileOne order (category_id = 1, Top-up games)
+                if ($request->paymentMethod == 1 && $orderProduct->product->smileone_name && $productData['product']['category_id'] == 1) {
+
+                    // Get requirements (userid, zoneid) from cart item
+                    $requirements = $productData['requirements'] ?? [];
+                    $userid = null;
+                    $zoneid = null;
+
+                    // Extract userid and zoneid from requirements
+                    if (is_array($requirements)) {
+                        foreach ($requirements as $req) {
+                            if (isset($req['requirement']['name'])) {
+                                $reqName = strtolower($req['requirement']['name']);
+                                if (strpos($reqName, 'id') !== false || strpos($reqName, 'user') !== false || strpos($reqName, 'آي دي') !== false) {
+                                    $userid = $req['value'];
+                                } elseif (strpos($reqName, 'server') !== false || strpos($reqName, 'zone') !== false || strpos($reqName, 'سيرفر') !== false) {
+                                    $zoneid = $req['value'];
+                                }
+                            }
+                        }
+                        // Fallback: if we have requirements array with values
+                        if (!$userid && !empty($requirements)) {
+                            $reqValues = array_values(array_filter(array_column($requirements, 'value')));
+                            $userid = $reqValues[0] ?? null;
+                            $zoneid = $reqValues[1] ?? 1;
+                        }
+                    }
+
+                    if ($userid) {
+                        $smileoneController = app(\App\Http\Controllers\SmileOneController::class);
+
+                        // Create SmileOne order for each quantity
+                        for ($i = 0; $i < $orderProduct->quantity; $i++) {
+                            $smileoneRequest = new Request([
+                                'userid' => $userid,
+                                'zoneid' => $zoneid ?? 1,
+                                'product' => $orderProduct->product->smileone_name,
+                                'productid' => $orderProduct->variantObj?->smileone_id ?? $orderProduct->variant->smileone_id ?? null,
+                            ]);
+
+                            $response = $smileoneController->createPurchase($smileoneRequest);
+
+                            Log::info('SmileOne Order Response', [
+                                'order_id' => $order->id,
+                                'product' => $orderProduct->product->smileone_name,
+                                'response' => $response
+                            ]);
+
+                            if (isset($response['status']) && $response['status'] != 200) {
+                                Log::error('SmileOne Order Failed', [
+                                    'order_id' => $order->id,
+                                    'response' => $response
+                                ]);
+                                // Don't rollback, just log the error - admin can handle manually
+                            }
+                        }
+
+                        $orderProduct->provider_status = 'sent_to_smileone';
+                        $orderProduct->save();
+                    }
+                }
+
+                // Process MooGold order (category_id = 2, Cards/Vouchers)
                 if ($request->paymentMethod == 1 && $orderProduct->product->moogold_id && $productData['product']['category_id'] == 2) {
 
                     $moogoldRequest = new Request([
