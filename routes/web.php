@@ -90,10 +90,10 @@ Route::middleware(['auth:customer'])->group(function () {
     Route::get('/api/variant-redemptions/my', [VariantRedemptionController::class, 'myRedemptions'])->name('variant-redemptions.my');
 });
 
-Route::get('/login', [ApplicationController::class, 'login'])->name('website.login');
+Route::get('/login', [ApplicationController::class, 'login'])->name('website.login')->middleware('guest:customer');
 Route::post('/login', [ApplicationController::class, 'do_login'])->name('website.do-login')->middleware('guest:customer');
-Route::get('/admin/login/', [AuthController::class, 'login'])->name('login')->middleware('guest');
-Route::post('/do-login', [AuthController::class, 'do_login'])->name('do-login')->middleware('guest');
+Route::get('/admin/login/', [AuthController::class, 'login'])->name('login')->middleware('guest:web');
+Route::post('/do-login', [AuthController::class, 'do_login'])->name('do-login')->middleware('guest:web');
 Route::get('/customer-logout', [AuthController::class, 'customer_logout'])->name('customer-logout');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
@@ -113,7 +113,7 @@ Route::post('/smileone/post', [SmileOneController::class, 'postRequest']);
 
 
 
-Route::middleware(['auth', 'verified'])->group(function () {
+Route::middleware(['auth', 'verified', 'admin'])->group(function () {
     Route::get('/home', [HomeController::class, 'home'])->name('home');
 
     Route::middleware('can:users')->group(function () {

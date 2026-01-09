@@ -21,7 +21,12 @@ class RedirectIfAuthenticated
 
         foreach ($guards as $guard) {
             if (Auth::guard($guard)->check()) {
-                return redirect('/');
+                // If customer guard, redirect to website home
+                if ($guard === 'customer') {
+                    return redirect('/');
+                }
+                // If admin/web guard (or default), redirect to admin home
+                return redirect('/home');
             }
         }
 

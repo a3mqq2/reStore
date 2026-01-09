@@ -12,6 +12,23 @@ class Authenticate extends Middleware
      */
     protected function redirectTo(Request $request): ?string
     {
-        return $request->expectsJson() ? null : route('login');
+        if ($request->expectsJson()) {
+            return null;
+        }
+
+        // Check if the request is for admin routes (starts with /admin, /home, or dashboard-related paths)
+        if ($request->is('admin/*') || $request->is('home') || $request->is('users/*') ||
+            $request->is('reports/*') || $request->is('cities/*') || $request->is('content') ||
+            $request->is('banners/*') || $request->is('redemptions/*') || $request->is('variant-redemptions') ||
+            $request->is('payment-methods/*') || $request->is('customers/*') || $request->is('cards/*') ||
+            $request->is('faqs/*') || $request->is('products/*') || $request->is('product_categories/*') ||
+            $request->is('coupons/*') || $request->is('cashbacks/*') || $request->is('orders/*') ||
+            $request->is('discounts/*') || $request->is('messages/*') || $request->is('account-categories/*') ||
+            $request->is('accounts/*')) {
+            return route('login'); // Admin login
+        }
+
+        // For all other routes (customer/website routes), redirect to customer login
+        return route('website.login');
     }
 }

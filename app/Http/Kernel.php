@@ -70,5 +70,6 @@ class Kernel extends HttpKernel
         'permission' => \Spatie\Permission\Middleware\PermissionMiddleware::class,
         'profile.complete' => \App\Http\Middleware\CheckUserProfileCompletion::class,
         'maintenance.check' => \App\Http\Middleware\CheckMaintenanceMode::class,
+        'admin' => \App\Http\Middleware\EnsureUserIsAdmin::class,
     ];
 }

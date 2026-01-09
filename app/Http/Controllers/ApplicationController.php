@@ -113,6 +113,21 @@ class ApplicationController extends Controller
         try {
             DB::beginTransaction();
 
+            // Double-check for existing customer to prevent race condition
+            $existingCustomer = Customer::where('email', $request->email)
+                ->orWhere('phone_number', $request->phone)
+                ->lockForUpdate()
+                ->first();
+
+            if ($existingCustomer) {
+                DB::rollback();
+                if ($existingCustomer->email === $request->email) {
+                    return redirect()->back()->withInput()->withErrors(['email' => 'البريد الإلكتروني مسجل مسبقاً']);
+                } else {
+                    return redirect()->back()->withInput()->withErrors(['phone' => 'رقم الهاتف مسجل مسبقاً']);
+                }
+            }
+
             $customer = new Customer();
             $customer->name = $request->name;
             $customer->phone_number = $request->phone;
@@ -129,6 +144,20 @@ class ApplicationController extends Controller
             DB::commit();
             Cookie::queue('payment_method', 1, 60*24*30);
             return redirect('/');
+        } catch(\Illuminate\Database\QueryException $e) {
+            Log::error('Database error during registration: ' . $e->getMessage());
+            DB::rollback();
+
+            // Check if it's a duplicate entry error
+            if ($e->getCode() == 23000 || strpos($e->getMessage(), 'Duplicate entry') !== false) {
+                if (strpos($e->getMessage(), 'email') !== false) {
+                    return redirect()->back()->withInput()->withErrors(['email' => 'البريد الإلكتروني مسجل مسبقاً']);
+                } else if (strpos($e->getMessage(), 'phone') !== false) {
+                    return redirect()->back()->withInput()->withErrors(['phone' => 'رقم الهاتف مسجل مسبقاً']);
+                }
+            }
+
+            return redirect()->back()->withInput()->withErrors(['error' => 'حدث خطأ أثناء التسجيل. حاول مرة أخرى.']);
         } catch(\Exception $e) {
             Log::error('Error during registration: ' . $e->getMessage());
             DB::rollback();
