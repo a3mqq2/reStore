@@ -27,11 +27,23 @@ class SendResetLink extends Notification
 
     public function toMail($notifiable)
     {
+        $resetUrl = url(route('website.reset-link', [
+            'token' => $this->customer->remember_token,
+            'email' => $this->customer->email
+        ], false));
+
+        \Log::info('Building password reset email', [
+            'customer_id' => $this->customer->id,
+            'email' => $this->customer->email,
+            'reset_url' => $resetUrl
+        ]);
+
         return (new MailMessage)
-                    ->subject('إعادة تعيين كلمة المرور')
+                    ->subject('إعادة تعيين كلمة المرور - ReStore')
                     ->greeting('مرحبا ' . $this->customer->name)
                     ->line('لقد تلقينا طلبًا لإعادة تعيين كلمة المرور الخاصة بحسابك.')
-                    ->action('إعادة تعيين كلمة المرور', url(route('website.reset-link', ['token' => $this->customer->createToken('authToken')->plainTextToken, 'email' => $this->customer->email], false)))
+                    ->action('إعادة تعيين كلمة المرور', $resetUrl)
+                    ->line('هذا الرابط صالح لمرة واحدة فقط.')
                     ->line('إذا لم تطلب إعادة تعيين كلمة المرور، فلا داعي لاتخاذ أي إجراء.');
     }
 }

@@ -344,16 +344,49 @@ class ApplicationController extends Controller
 
         try {
             DB::beginTransaction();
+
+            Log::info('Password reset requested', ['email' => $request->email, 'ip' => $request->ip()]);
+
             $customer = Customer::where('email', $request->email)->first();
             if(!$customer) {
+                Log::warning('Password reset failed: Customer not found', ['email' => $request->email]);
                 return redirect()->back()->withErrors(['لم يتم العثور على حسابك']);
             }
 
-            // $customer->notify(new SendResetLink($customer->email, $customer));
-            DB::commit();
-            return redirect()->back()->with('success', 'تم ارسال رابط اعادة التعيين عبر البريد الالكتروني بنجاح');
+            Log::info('Customer found for password reset', ['customer_id' => $customer->id, 'email' => $customer->email]);
+
+            // Generate a secure reset token
+            $token = Str::random(60);
+            $customer->remember_token = $token;
+            $customer->save();
+
+            Log::info('Reset token generated', ['customer_id' => $customer->id, 'token_length' => strlen($token)]);
+
+            try {
+                // Try to send notification
+                $customer->notify(new SendResetLink($customer->email, $customer));
+                Log::info('Reset notification sent successfully', ['customer_id' => $customer->id, 'email' => $customer->email]);
+
+                DB::commit();
+                return redirect()->back()->with('success', 'تم ارسال رابط اعادة التعيين عبر البريد الالكتروني بنجاح');
+            } catch(\Exception $notificationError) {
+                Log::error('Failed to send reset notification', [
+                    'customer_id' => $customer->id,
+                    'email' => $customer->email,
+                    'error' => $notificationError->getMessage(),
+                    'trace' => $notificationError->getTraceAsString()
+                ]);
+
+                DB::rollBack();
+                return redirect()->back()->withErrors(['فشل إرسال البريد الإلكتروني. تأكد من إعدادات البريد في .env']);
+            }
         } catch(\Exception $e) {
-            dd($e->getMessage());
+            Log::error('Password reset error', [
+                'email' => $request->email,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+
             DB::rollBack();
             return redirect()->back()->withErrors(['هناك خطا يرجى التواصل مع الدعم الفني']);
         }
@@ -368,42 +401,52 @@ class ApplicationController extends Controller
     {
         $request->validate([
             "email" => "required|email",
-            "password" => "required|confirmed",
+            "password" => "required|confirmed|min:8",
             "token" => "required"
         ]);
-    
-        $user = Customer::where('email', $request->email)->first();
-    
-        if (!$user) {
+
+        Log::info('Password reset attempt', ['email' => $request->email, 'ip' => $request->ip()]);
+
+        $customer = Customer::where('email', $request->email)->first();
+
+        if (!$customer) {
+            Log::warning('Password reset failed: Customer not found', ['email' => $request->email]);
             return redirect()->back()->withErrors(['حدث خطأ ما يرجى المحاولة لاحقاً']);
         }
 
+        Log::info('Customer found for password reset', ['customer_id' => $customer->id]);
 
+        // Verify the token
+        if (!$customer->remember_token || $customer->remember_token !== $request->token) {
+            Log::warning('Password reset failed: Invalid token', [
+                'customer_id' => $customer->id,
+                'email' => $customer->email,
+                'token_provided' => substr($request->token, 0, 10) . '...',
+                'token_expected' => $customer->remember_token ? substr($customer->remember_token, 0, 10) . '...' : 'null'
+            ]);
+            return redirect()->back()->withErrors(['رابط إعادة التعيين غير صالح أو منتهي الصلاحية']);
+        }
 
-        $user->password = Hash::make($request->password);
-        $user->save();
-        return redirect()->route('website.login')->with('success', 'تم تغيير كلمة المرور بنجاح');
-    
-        // $hashedToken = hash('sha256', $request->token);
-    
-        // // Check the token in the personal_access_tokens table
-        // $token = PersonalAccessToken::where('token', $hashedToken)
-        //                             ->where('tokenable_id', $user->id)
-        //                             ->where('tokenable_type', Customer::class)
-        //                             ->first();
-    
-        // dd($token);
-        // if ($token) {
-        //     $user->password = $request->password;
-        //     $user->save();
-    
-        //     // Optionally, you can delete the used token
-        //     $token->delete();
-    
-        //     return redirect()->back()->with('success', 'تم تغيير كلمة المرور بنجاح');
-        // } else {
-        //     return redirect()->back()->with('error', 'حدث خطأ ما يرجى المحاولة لاحقاً');
-        // }
+        Log::info('Token verified successfully', ['customer_id' => $customer->id]);
+
+        try {
+            // Update password and clear token
+            $customer->password = Hash::make($request->password);
+            $customer->remember_token = null;
+            $customer->save();
+
+            Log::info('Password reset successful', ['customer_id' => $customer->id, 'email' => $customer->email]);
+
+            return redirect()->route('website.login')->with('success', 'تم تغيير كلمة المرور بنجاح');
+        } catch(\Exception $e) {
+            Log::error('Error updating password', [
+                'customer_id' => $customer->id,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+
+            return redirect()->back()->withErrors(['حدث خطأ أثناء تحديث كلمة المرور']);
+        }
     }
 
     public function addBalance(Request $request)

@@ -245,3 +245,8 @@ Route::get('/test-moogold/{id}', function ($id, MoogoldController $moogold) {
 Route::get('add-product/{id}', function($product_id,$moogold_id) {
 
 });
+
+// Email testing routes - Remove in production or protect with middleware
+if (config('app.debug')) {
+    require __DIR__.'/test-email.php';
+}
