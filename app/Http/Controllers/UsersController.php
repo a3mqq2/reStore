@@ -110,12 +110,18 @@ class UsersController extends Controller
         ]);
 
         // Update the user
-        $user->update([
+        $updateData = [
             'name' => $validatedData['name'],
             'phone' => $validatedData['phone'],
             'email' => $validatedData['email'],
-            'password' => isset($validatedData['password']) ? $validatedData['password'] : $user->password,
-        ]);
+        ];
+
+        // Only update password if provided, and hash it
+        if (!empty($validatedData['password'])) {
+            $updateData['password'] = Hash::make($validatedData['password']);
+        }
+
+        $user->update($updateData);
 
         // Sync permissions
         $user->syncPermissions($validatedData['permissions']);
