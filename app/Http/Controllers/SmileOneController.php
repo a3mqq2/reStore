@@ -278,7 +278,7 @@ class SmileOneController extends Controller
                 $balanceResponse = $moogold->getBalance();
                 $balance = $balanceResponse['balance'] ?? 0;
 
-                if ($balance < $minBalanceThreshold) {
+                if ($balance <= 0) {
                     return response()->json([
                         'available' => false,
                         'message' => 'عذراً، المنتج غير متوفر حالياً. يرجى المحاولة لاحقاً.'
