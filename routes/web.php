@@ -233,6 +233,8 @@ Route::get('/smileone/sync-variants', [SmileOneController::class, 'syncSmileOneV
 
 
 Route::get('/sync-moogold-products', [MoogoldController::class, 'syncAllMoogoldProducts']);
+Route::get('/moogold-products/{categoryId}', [MoogoldController::class, 'getProductList']);
+Route::get('/moogold-product/{id}', [MoogoldController::class, 'getProductDetail']);
 
 
 Route::get('/test-moogold/{id}', function ($id, MoogoldController $moogold) {
