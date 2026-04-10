@@ -373,12 +373,65 @@ class CartController extends Controller
                     }
                 }
 
+                // Process MooGold order (category_id = 1, Direct Top-up)
+                if ($request->paymentMethod == 1 && $orderProduct->product->moogold_id && $productData['product']['category_id'] == 1 && !$orderProduct->product->smileone_name) {
+
+                    $moogoldData = [
+                        'category' => 1,
+                        'product-id' => $orderProduct->variantObj?->moogold_id ?? $orderProduct->product->moogold_id,
+                        'quantity' => $orderProduct->quantity,
+                    ];
+
+                    // Add requirements (User ID, Server ID, etc.)
+                    $requirements = $productData['requirements'] ?? [];
+                    if (is_array($requirements)) {
+                        foreach ($requirements as $req) {
+                            if (isset($req['requirement']['name']) && isset($req['value'])) {
+                                $moogoldData[$req['requirement']['name']] = $req['value'];
+                            }
+                        }
+                    }
+
+                    $moogoldRequest = new Request($moogoldData);
+
+                    Log::info('Cart - Moogold Top-up Start', [
+                        'order_id' => $order->id,
+                        'product_id' => $orderProduct->product->id,
+                        'moogold_data' => $moogoldData,
+                    ]);
+
+                    $moogoldController = app(\App\Http\Controllers\MoogoldController::class);
+                    $response = $moogoldController->createOrder($moogoldRequest);
+
+                    if ($response->failed()) {
+                        Log::error('Cart - Moogold Top-up Failed', [
+                            'order_id' => $order->id,
+                            'status' => $response->status(),
+                            'response' => $response->json(),
+                        ]);
+                    } else {
+                        Log::info('Cart - Moogold Top-up Success', [
+                            'order_id' => $order->id,
+                            'response' => $response->json(),
+                        ]);
+                        $orderProduct->provider_status = 'sent_to_moogold';
+                        $orderProduct->save();
+                    }
+                }
+
                 // Process MooGold order (category_id = 2, Cards/Vouchers)
                 if ($request->paymentMethod == 1 && $orderProduct->product->moogold_id && $productData['product']['category_id'] == 2) {
 
                     $moogoldRequest = new Request([
                         'category' => 2,
-                        'product_id' => $orderProduct->variantObj?->moogold_id ?? $orderProduct->product->moogold_id,
+                        'product-id' => $orderProduct->variantObj?->moogold_id ?? $orderProduct->product->moogold_id,
+                        'quantity' => $orderProduct->quantity,
+                    ]);
+
+                    Log::info('Cart - Moogold Order Start', [
+                        'order_id' => $order->id,
+                        'product_id' => $orderProduct->product->id,
+                        'moogold_id' => $orderProduct->variantObj?->moogold_id ?? $orderProduct->product->moogold_id,
                         'quantity' => $orderProduct->quantity,
                     ]);
 
@@ -386,6 +439,11 @@ class CartController extends Controller
                     $response = $moogoldController->createOrder($moogoldRequest);
 
                     if ($response->status() != 200) {
+                        Log::error('Cart - Moogold Order Failed', [
+                            'order_id' => $order->id,
+                            'status' => $response->status(),
+                            'response' => $response->json(),
+                        ]);
                         DB::rollBack();
                         return response()->json(['success' => false], 422);
                     }
@@ -393,15 +451,31 @@ class CartController extends Controller
                     $moogoldOrderId = $response->json('order_id');
 
                     if (!$moogoldOrderId) {
+                        Log::error('Cart - Moogold No Order ID', [
+                            'order_id' => $order->id,
+                            'response' => $response->json(),
+                        ]);
                         DB::rollBack();
                         return response()->json(['success' => false], 422);
                     }
+
+                    Log::info('Cart - Moogold Order Created', [
+                        'order_id' => $order->id,
+                        'moogold_order_id' => $moogoldOrderId,
+                    ]);
 
                     $detailResponse = $moogoldController->getOrderDetail($moogoldOrderId);
 
                     $status = $detailResponse->json('order_status');
                     $itemData = $detailResponse->json('item.0') ?? [];
                     $vouchers = $itemData['voucher_code'] ?? [];
+
+                    Log::info('Cart - Moogold Order Detail', [
+                        'order_id' => $order->id,
+                        'moogold_order_id' => $moogoldOrderId,
+                        'order_status' => $status,
+                        'vouchers_count' => count($vouchers),
+                    ]);
 
                     if ($status === 'completed' && !empty($vouchers)) {
 

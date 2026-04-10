@@ -98,24 +98,49 @@ class MoogoldController extends Controller
      */
     public function createOrder(Request $request)
     {
+        $data = $request->all();
+        $data['partnerOrderId'] = 'ORD-' . time() . '-' . rand(1000, 9999);
+
         $payload = [
             'path' => 'order/create_order',
-            'data' => $request->all(),
-            "partnerOrderId" => env('PARTNER_ORDER_ID'),
+            'data' => $data,
         ];
-        return $this->callMoogold($payload, 'order/create_order');
+
+        Log::info('Moogold Create Order - Request', [
+            'payload' => $payload,
+        ]);
+
+        $response = $this->callMoogold($payload, 'order/create_order');
+
+        Log::info('Moogold Create Order - Response', [
+            'status' => $response->status(),
+            'body' => $response->json(),
+        ]);
+
+        return $response;
     }
 
 
 
     public function getOrderDetail(string $orderId)
     {
-        return $this->callMoogold([
+        Log::info('Moogold Order Detail - Request', [
+            'order_id' => $orderId,
+        ]);
+
+        $response = $this->callMoogold([
             'path' => 'order/order_detail',
             'data' => [
                 'order_id' => $orderId,
             ],
         ], 'order/order_detail');
+
+        Log::info('Moogold Order Detail - Response', [
+            'status' => $response->status(),
+            'body' => $response->json(),
+        ]);
+
+        return $response;
     }
 
     public function serverList($id)
