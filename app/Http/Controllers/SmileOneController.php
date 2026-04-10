@@ -9,10 +9,18 @@ use Illuminate\Support\Facades\Log;
 
 class SmileOneController extends Controller
 {
-    private $apiBaseUrl = 'https://www.smile.one/br';
-    private $apiKey = '37bf91158bebfdd0684279075cf056c3';
-    private $uid = "1937786";
-    private $email = "Ezo706174@gmail.com";
+    private $apiBaseUrl;
+    private $apiKey;
+    private $uid;
+    private $email;
+
+    public function __construct()
+    {
+        $this->apiBaseUrl = env('SMILE_ONE_API_BASE_URL', 'https://www.smile.one/br');
+        $this->apiKey = env('SMILE_ONE_API_KEY');
+        $this->uid = env('SMILE_ONE_UID');
+        $this->email = env('SMILE_ONE_EMAIL');
+    }
 
     public function getProducts()
     {
