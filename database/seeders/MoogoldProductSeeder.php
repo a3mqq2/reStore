@@ -17,7 +17,7 @@ class MoogoldProductSeeder extends Seeder
 {
     /**
      * تشغيل الـ Seeder
-     * استخدام: php artisan db:seed --class=MoogoldProductSeeder
+     * استخدام: w
      */
     public function run(): void
     {
