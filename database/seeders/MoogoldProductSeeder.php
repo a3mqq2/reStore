@@ -24,7 +24,8 @@ class MoogoldProductSeeder extends Seeder
         $products = [
             // ['moogold_id' => 2362359, 'name' => 'Mobile Legends (Indonesia)'],
             // ['moogold_id' => 4690648, 'name' => 'Mobile Legends (Malaysia)'],
-            ['moogold_id' => 8957883, 'name' => 'Mobile Legends (Philippines)'],
+            // ['moogold_id' => 8957883, 'name' => 'Mobile Legends (Philippines)'],
+            ['moogold_id' => 10874415, 'name' => 'Mobile Legends (Turkey)'],
         ];
 
         foreach ($products as $p) {
