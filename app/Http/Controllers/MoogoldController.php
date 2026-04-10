@@ -35,11 +35,11 @@ class MoogoldController extends Controller
     /**
      * List all products (or filter by category if provided).
      */
-    public function getProductList()
+    public function getProductList($categoryId = 1)
     {
         $payload = [
             'path' => 'product/list_product',
-            'category_id' => 1
+            'category_id' => $categoryId
         ];
 
         return $this->callMoogold($payload, 'product/list_product');
@@ -140,16 +140,19 @@ class MoogoldController extends Controller
         $authBasic = base64_encode("{$this->partnerId}:{$this->secretKey}");
 
         $response = Http::withHeaders([
-                'timestamp'    => $timestamp,
-                'auth'         => $auth,
-                'Authorization'=> 'Basic ' . $authBasic,
+                'timestamp'     => $timestamp,
+                'auth'          => $auth,
+                'Authorization' => 'Basic ' . $authBasic,
+                'Content-Type'  => 'application/json',
             ])
-            ->withBody($payloadJson, 'application/json')
-            ->post($this->baseUrl . $path);
+            ->send('POST', $this->baseUrl . $path, [
+                'body' => $payloadJson,
+            ]);
 
         Log::info('Moogold API', [
             'path'     => $path,
             'status'   => $response->status(),
+            'body'     => $response->body(),
             'response' => $response->json(),
         ]);
 
