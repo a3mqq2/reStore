@@ -21,8 +21,18 @@ class MoogoldProductSeeder extends Seeder
      */
     public function run(): void
     {
-        $moogoldId = 2362359;
+        $products = [
+            // ['moogold_id' => 2362359, 'name' => 'Mobile Legends (Indonesia)'],
+            ['moogold_id' => 4690648, 'name' => 'Mobile Legends (Malaysia)'],
+        ];
 
+        foreach ($products as $p) {
+            $this->importProduct($p['moogold_id'], $p['name']);
+        }
+    }
+
+    private function importProduct(int $moogoldId, string $name): void
+    {
         $moogold = app(MoogoldController::class);
 
         $this->command->info("جاري جلب بيانات المنتج من Moogold (ID: {$moogoldId})...");
@@ -47,7 +57,7 @@ class MoogoldProductSeeder extends Seeder
         try {
             // إنشاء المنتج الرئيسي
             $product = Product::create([
-                'name' => 'Mobile Legends (Indonesia)',
+                'name' => $name,
                 'description' => $productData['Product_Name'],
                 'category_id' => 1,
                 'moogold_id' => $moogoldId,
